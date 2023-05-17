@@ -11,8 +11,8 @@ GLMmodel*downlegL=NULL;
 GLMmodel*downlegR=NULL;
 GLMmodel*uplegL=NULL;
 GLMmodel*uplegR=NULL;
-int show[10] = {1,1,1,1,1,1,1,1,1,1};
-int ID=0;
+int show[10] = {1,0,1,0,0,1,0,0,0,0};
+int ID=2;
 void keyboard(unsigned char key,int x,int y){
     if(key=='0') ID=0;
     if(key=='1') ID=1;
@@ -55,9 +55,7 @@ void display()
         else glColor3f(1,1,1);
         if(show[1]) glmDraw(head, GLM_MATERIAL);
 
-        if(ID==2) glColor3f(1,0,0);
-        else glColor3f(1,1,1);
-        if(show[2]) glmDraw(downarmR, GLM_MATERIAL);
+
 
         if(ID==3) glColor3f(1,0,0);
         else glColor3f(1,1,1);
@@ -67,9 +65,26 @@ void display()
         else glColor3f(1,1,1);
         if(show[4]) glmDraw(uparmL, GLM_MATERIAL);
 
-        if(ID==5) glColor3f(1,0,0);
-        else glColor3f(1,1,1);
-        if(show[5]) glmDraw(uparmR, GLM_MATERIAL);
+        glPushMatrix();
+            //glTranslatef(teapotX,teapotY,0);
+            glTranslatef(-1.213333, +0.400000, 0);
+            glRotatef(angle,0,0,1);
+            glTranslatef(1.213333, -0.400000, 0);
+            if(ID==5) glColor3f(1,0,0);
+            else glColor3f(1,1,1);
+            if(show[5]) glmDraw(uparmR, GLM_MATERIAL);
+
+            glPushMatrix();
+                glTranslatef(-1.919999, +0.080000, 0);
+                //glTranslatef(teapotX,teapotY,0);
+                glRotatef(angle,0,0,1);
+                glTranslatef(1.919999, -0.080000, 0);
+                if(ID==2) glColor3f(1,0,0);
+                else glColor3f(1,1,1);
+                if(show[2]) glmDraw(downarmR, GLM_MATERIAL);
+            glPopMatrix();
+
+        glPopMatrix();
 
         if(ID==6) glColor3f(1,0,0);
         else glColor3f(1,1,1);
@@ -86,17 +101,19 @@ void display()
         if(ID==9) glColor3f(1,0,0);
         else glColor3f(1,1,1);
         if(show[9]) glmDraw(uplegR, GLM_MATERIAL);
-        glPushMatrix();
-            glTranslatef(teapotX,teapotY,0);
 
-            glPopMatrix();
+
+
         glPopMatrix();
+        glColor3f(0,1,0);
+        glutSolidTeapot(0.02);
         glutSwapBuffers();
 }
 int oldX=0, oldY=0;
 void motion(int x,int y){
     teapotX += (x-oldX)/150.0;
-    teapotY += (y-oldY)/150.0;
+    teapotY -= (y-oldY)/150.0;
+    angle += x-oldX;
     oldX = x;
     oldY = y;
     printf("glTranslatef(%f, %f, 0);\n",teapotX,teapotY);
@@ -108,7 +125,7 @@ void mouse(int button,int state,int x,int y)
     {
         oldX = x;
         oldY = y;
-        angle = x;
+        ///angle = x;
     }
     display();
 }
